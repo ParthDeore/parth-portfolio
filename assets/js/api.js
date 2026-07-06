@@ -3,7 +3,7 @@
  * IMPORTANT: change API_BASE_URL below once you deploy your backend
  * (e.g. to Render). While testing locally, leave it as the localhost URL.
  */
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "https://parth-portfolio-wtdj.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
   registerVisit();
