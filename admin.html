@@ -130,7 +130,7 @@
 </div>
 
 <script>
-const API_BASE_URL = "https://parth-portfolio-wtdj.onrender.com"; // change after you deploy the backend
+const API_BASE_URL = "https://parth-portfolio-wtdj.onrender.com";
 let ADMIN_KEY = sessionStorage.getItem("admin_key") || "";
 
 function login() {
@@ -188,6 +188,7 @@ async function loadMessages() {
       <td><strong>${escapeHtml(m.subject || "")}</strong><br>${escapeHtml(m.message)}</td>
       <td>${new Date(m.created_at).toLocaleString()}</td>
       <td>
+        <button class="btn-primary" onclick="replyToMessage('${escapeAttr(m.email)}', '${escapeAttr(m.subject || '')}', '${escapeAttr(m.name)}', '${escapeAttr(m.message)}')">Reply</button>
         ${!m.is_read ? `<button class="btn-secondary" onclick="markRead(${m.id})">Mark read</button>` : ""}
         <button class="btn-danger" onclick="deleteMessage(${m.id})">Delete</button>
       </td>
@@ -275,6 +276,21 @@ async function deleteBlogPost(id) {
   await fetch(`${API_BASE_URL}/api/admin/blog/${id}`, { method: "DELETE", headers: authHeaders() });
   loadBlogPosts();
   setStatus("Post deleted.");
+}
+
+function replyToMessage(email, subject, name, originalMessage) {
+  const replySubject = subject ? `Re: ${subject}` : "Re: your message";
+  const quoted = originalMessage
+    .split("\n")
+    .map(line => `> ${line}`)
+    .join("\n");
+  const body = `Hi ${name},\n\n\n\n---\nYou wrote:\n${quoted}`;
+  const mailtoUrl = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(replySubject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailtoUrl;
+}
+
+function escapeAttr(str) {
+  return (str ?? "").replace(/'/g, "&#39;").replace(/"/g, "&quot;");
 }
 
 function escapeHtml(str) {
